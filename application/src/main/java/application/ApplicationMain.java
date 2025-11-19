@@ -6,28 +6,34 @@ import order.Order;
 import process.OrderProcessor;
 import repository.OrderRepository;
 
+import java.util.stream.IntStream;
+
 public class ApplicationMain {
-    private final static ProductFactory PRODUCT_FACTORY = new ProductFactory();
-    private final static OrderRepository ORDER_REPOSITORY = new OrderRepository();
-    private final static AsyncExecutor ASYNC_EXECUTOR = new AsyncExecutor();
+    private final static ProductFactory productFactory = new ProductFactory();
+    private final static OrderRepository orderRepository = new OrderRepository();
+    private final static AsyncExecutor asyncExecutory = new AsyncExecutor();
 
     public static void main(final String[] args) {
-        // Generate products and store then as orders.
-        for (int i = 0; i < 100; i++) {
-            final var product = i % 2 == 0
-                    ? PRODUCT_FACTORY.createElectronics()
-                    : PRODUCT_FACTORY.createClothingArticle();
+        IntStream.range(0, 100)
+                .mapToObj(number -> {
+                    final var product = isEven(number)
+                            ? productFactory.createElectronics()
+                            : productFactory.createClothingArticle();
 
-            ORDER_REPOSITORY.saveProduct(Order.builder()
-                    .id(Integer.toString(i))
-                    .product(product)
-                    .build());
-        }
+                    return Order.builder()
+                            .id(Integer.toString(number))
+                            .product(product)
+                            .build();
+                }).forEach(orderRepository::saveOrder);
 
-        ORDER_REPOSITORY.findAllProducts()
+        orderRepository.findAllProducts()
                 .stream()
                 .map(OrderProcessor::new)
-                .forEach(orderProcessor -> ASYNC_EXECUTOR.execute(orderProcessor::processOrder));
+                .forEach(orderProcessor -> asyncExecutory.execute(orderProcessor::processOrder));
 
+    }
+
+    private static boolean isEven(final int i) {
+        return i % 2 == 0;
     }
 }

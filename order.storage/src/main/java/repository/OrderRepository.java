@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class OrderRepository {
     private final ConcurrentHashMap<String, Order<?>> storage = new ConcurrentHashMap<>();
 
-    public void saveProduct(Order<?> product) {
+    public void saveOrder(Order<?> product) {
         storage.put(product.getId(), product);
     }
 
