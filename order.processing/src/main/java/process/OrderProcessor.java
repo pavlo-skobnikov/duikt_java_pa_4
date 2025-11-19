@@ -1,14 +1,16 @@
 package process;
 
-public class OrderProcessor {
-    private final Order<?> product;
+import order.Order;
 
-    public OrderProcessor(final Order<?> product) {
-        this.product = product;
+public class OrderProcessor {
+    private final Order<?> order;
+
+    public OrderProcessor(final Order<?> order) {
+        this.order = order;
     }
 
     public void processOrder() {
-        System.out.printf("Starting processing of the order for product ID: %s...%n", product.product().getId());
+        System.out.printf("Starting processing of the order [%s] for product [%s]...%n", order.getId(), order.getProduct().getId());
 
         try {
             // Simulate order processing time.
@@ -17,6 +19,6 @@ public class OrderProcessor {
             System.err.printf("Order processing was interrupted: %s%n", e.getMessage());
         }
 
-        System.out.printf("Processing finished of the order for product ID: %s%n", product.product().getId());
+        System.out.printf("Processing finished of the order [%s] for product [%s]%n", order.getId(), order.getProduct().getId());
     }
 }
