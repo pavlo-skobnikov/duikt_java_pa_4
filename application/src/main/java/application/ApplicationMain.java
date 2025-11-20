@@ -14,6 +14,7 @@ public class ApplicationMain {
     private final static AsyncExecutor asyncExecutory = new AsyncExecutor();
 
     public static void main(final String[] args) {
+        // Iterate 100 times to create orders with different products.
         IntStream.range(0, 100)
                 .mapToObj(number -> {
                     final var product = isEven(number)
@@ -26,6 +27,7 @@ public class ApplicationMain {
                             .build();
                 }).forEach(orderRepository::saveOrder);
 
+        // Process all orders asynchronously.
         orderRepository.findAllProducts()
                 .stream()
                 .map(OrderProcessor::new)
